@@ -1,0 +1,65 @@
+<idea-plugin>
+    <id>com.magicapi.idea.plugin</id>
+    <name>Magic Script</name>
+    <version>1.0.0-SNAPSHOT</version>
+    <vendor email="support@magicapi.com" url="https://magicapi.com">Magic API Team</vendor>
+    
+    <description><![CDATA[
+        IntelliJ IDEA plugin for Magic Script language support.
+        <br/>
+        Magic Script is used in the magic-api framework for rapid API development.
+        <br/>
+        <br/>
+        Features:
+        <ul>
+            <li>Syntax highlighting for .ms files</li>
+            <li>Code completion for keywords and built-in modules</li>
+            <li>Navigation and reference resolution</li>
+            <li>Code inspections and error detection</li>
+            <li>Code formatting support</li>
+        </ul>
+    ]]></description>
+    
+    <change-notes><![CDATA[
+        <b>Version 1.0.0-SNAPSHOT</b>
+        <ul>
+            <li>Initial development version</li>
+            <li>Basic language support for Magic Script</li>
+            <li>File type recognition for .ms files</li>
+        </ul>
+    ]]></change-notes>
+    
+    <!-- 插件依赖 -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- 语言支持 -->
+        <fileType name="MagicScript" 
+                  implementationClass="com.magicapi.idea.lang.MagicScriptFileType" 
+                  fieldName="INSTANCE" 
+                  language="MagicScript" 
+                  extensions="ms"/>
+                  
+        <lang.parserDefinition language="MagicScript" 
+                             implementationClass="com.magicapi.idea.lang.parser.MagicScriptParserDefinition"/>
+        
+        <!-- 语法高亮 -->
+        <lang.syntaxHighlighterFactory language="MagicScript" 
+                                     implementationClass="com.magicapi.idea.highlighting.MagicScriptSyntaxHighlighterFactory"/>
+        
+        <!-- 代码补全 -->
+        <completion.contributor language="MagicScript" 
+                              implementationClass="com.magicapi.idea.completion.MagicScriptCompletionContributor"/>
+    </extensions>
+    
+    <actions>
+        <!-- 新建文件操作 -->
+        <action id="MagicScript.NewFile" 
+                class="com.magicapi.idea.actions.CreateMagicScriptFileAction"
+                text="Magic Script File" 
+                description="Create a new Magic Script file">
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
+        </action>
+    </actions>
+</idea-plugin>

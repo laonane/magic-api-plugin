@@ -1,0 +1,217 @@
+{
+  parserClass="com.magicapi.idea.lang.parser.MagicScriptParser"
+  parserUtilClass="com.magicapi.idea.lang.parser.MagicScriptParserUtil"
+  
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+  
+  psiClassPrefix="MS"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.magicapi.idea.lang.psi"
+  psiImplPackage="com.magicapi.idea.lang.psi.impl"
+  
+  elementTypeHolderClass="com.magicapi.idea.lang.psi.MSTypes"
+  elementTypeClass="com.magicapi.idea.lang.psi.MSElementType"
+  tokenTypeClass="com.magicapi.idea.lang.psi.MSTokenType"
+  
+  tokens=[
+    // 关键字
+    VAR='var'
+    FUNCTION='function'
+    RETURN='return'
+    IF='if'
+    ELSE='else'
+    FOR='for'
+    WHILE='while'
+    DO='do'
+    BREAK='break'
+    CONTINUE='continue'
+    TRY='try'
+    CATCH='catch'
+    FINALLY='finally'
+    THROW='throw'
+    IMPORT='import'
+    EXPORT='export'
+    TRUE='true'
+    FALSE='false'
+    NULL='null'
+    UNDEFINED='undefined'
+    
+    // 内置模块
+    BUILTIN_MODULE='regexp:(db|http|request|response|env|log)'
+    
+    // 操作符
+    PLUS='+'
+    MINUS='-'
+    MULTIPLY='*'
+    DIVIDE='/'
+    MODULO='%'
+    ASSIGN='='
+    PLUS_ASSIGN='+='
+    MINUS_ASSIGN='-='
+    MULTIPLY_ASSIGN='*='
+    DIVIDE_ASSIGN='/='
+    EQ='=='
+    NE='!='
+    LT='<'
+    GT='>'
+    LE='<='
+    GE='>='
+    AND='&&'
+    OR='||'
+    NOT='!'
+    INCREMENT='++'
+    DECREMENT='--'
+    
+    // 分隔符
+    LPAREN='('
+    RPAREN=')'
+    LBRACE='{'
+    RBRACE='}'
+    LBRACKET='['
+    RBRACKET=']'
+    SEMICOLON=';'
+    COMMA=','
+    DOT='.'
+    COLON=':'
+    QUESTION='?'
+    
+    // 字面量
+    STRING_LITERAL='regexp:"([^"\\\\]|\\\\.)*"|\'([^\'\\\\]|\\\\.)*\''
+    NUMBER_LITERAL='regexp:[0-9]+(\.[0-9]*)?([eE][+-]?[0-9]+)?'
+    INTEGER_LITERAL='regexp:[0-9]+'
+    
+    // 标识符
+    IDENTIFIER='regexp:[a-zA-Z_][a-zA-Z0-9_]*'
+    
+    // 注释
+    LINE_COMMENT='regexp://[^\r\n]*'
+    BLOCK_COMMENT='regexp:/\*([^*]|\*[^/])*\*/'
+  ]
+}
+
+// 程序入口
+program ::= statement*
+
+// 语句
+statement ::= varDeclaration
+           | functionDeclaration  
+           | ifStatement
+           | forStatement
+           | whileStatement
+           | doWhileStatement
+           | tryStatement
+           | throwStatement
+           | breakStatement
+           | continueStatement
+           | returnStatement
+           | importStatement
+           | exportStatement
+           | expressionStatement
+           | block
+
+// 变量声明
+varDeclaration ::= VAR IDENTIFIER (ASSIGN expression)? SEMICOLON? {
+  methods=[getName getNameIdentifier setName]
+  implements="com.intellij.psi.PsiNamedElement"
+}
+
+// 函数声明
+functionDeclaration ::= FUNCTION IDENTIFIER LPAREN parameterList? RPAREN block {
+  methods=[getName getNameIdentifier setName getParameters getBody]
+  implements="com.intellij.psi.PsiNamedElement"
+}
+
+// 参数列表
+parameterList ::= parameter (COMMA parameter)*
+
+// 参数
+parameter ::= IDENTIFIER {
+  methods=[getName getNameIdentifier setName]
+  implements="com.intellij.psi.PsiNamedElement"
+}
+
+// 控制流语句
+ifStatement ::= IF LPAREN expression RPAREN statement (ELSE statement)?
+
+forStatement ::= FOR LPAREN (varDeclaration | expression)? SEMICOLON expression? SEMICOLON expression? RPAREN statement
+
+whileStatement ::= WHILE LPAREN expression RPAREN statement
+
+doWhileStatement ::= DO statement WHILE LPAREN expression RPAREN SEMICOLON?
+
+tryStatement ::= TRY block (catchClause)* (finallyClause)?
+
+catchClause ::= CATCH LPAREN IDENTIFIER RPAREN block
+
+finallyClause ::= FINALLY block
+
+throwStatement ::= THROW expression SEMICOLON?
+
+breakStatement ::= BREAK SEMICOLON?
+
+continueStatement ::= CONTINUE SEMICOLON?
+
+returnStatement ::= RETURN expression? SEMICOLON?
+
+importStatement ::= IMPORT STRING_LITERAL SEMICOLON?
+
+exportStatement ::= EXPORT (varDeclaration | functionDeclaration | expression)
+
+expressionStatement ::= expression SEMICOLON?
+
+// 代码块
+block ::= LBRACE statement* RBRACE
+
+// 表达式
+expression ::= assignmentExpression
+
+assignmentExpression ::= conditionalExpression ((ASSIGN | PLUS_ASSIGN | MINUS_ASSIGN | MULTIPLY_ASSIGN | DIVIDE_ASSIGN) assignmentExpression)?
+
+conditionalExpression ::= logicalOrExpression (QUESTION expression COLON conditionalExpression)?
+
+logicalOrExpression ::= logicalAndExpression (OR logicalAndExpression)*
+
+logicalAndExpression ::= equalityExpression (AND equalityExpression)*
+
+equalityExpression ::= relationalExpression ((EQ | NE) relationalExpression)*
+
+relationalExpression ::= additiveExpression ((LT | GT | LE | GE) additiveExpression)*
+
+additiveExpression ::= multiplicativeExpression ((PLUS | MINUS) multiplicativeExpression)*
+
+multiplicativeExpression ::= unaryExpression ((MULTIPLY | DIVIDE | MODULO) unaryExpression)*
+
+unaryExpression ::= (NOT | MINUS | PLUS | INCREMENT | DECREMENT)* postfixExpression
+
+postfixExpression ::= primaryExpression (memberAccess | functionCall | arrayAccess | (INCREMENT | DECREMENT))*
+
+memberAccess ::= DOT IDENTIFIER
+
+functionCall ::= LPAREN argumentList? RPAREN
+
+arrayAccess ::= LBRACKET expression RBRACKET
+
+argumentList ::= expression (COMMA expression)*
+
+// 基础表达式
+primaryExpression ::= IDENTIFIER {
+  methods=[getName setName getReference]
+  implements="com.intellij.psi.PsiNamedElement"
+}
+| NUMBER_LITERAL
+| INTEGER_LITERAL  
+| STRING_LITERAL
+| TRUE | FALSE | NULL | UNDEFINED
+| BUILTIN_MODULE
+| LPAREN expression RPAREN
+| arrayLiteral
+| objectLiteral
+
+// 数组字面量
+arrayLiteral ::= LBRACKET (expression (COMMA expression)*)? RBRACKET
+
+// 对象字面量
+objectLiteral ::= LBRACE (property (COMMA property)*)? RBRACE
+
+// 对象属性
+property ::= (IDENTIFIER | STRING_LITERAL) COLON expression

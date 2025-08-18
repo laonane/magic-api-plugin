@@ -56,7 +56,7 @@ openai-*
 # Backup files
 *.bak
 *.backup
-*~
 
 # custom files
 dev-docs/
+/.intellijPlatform/

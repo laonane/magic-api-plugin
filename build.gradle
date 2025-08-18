@@ -1,0 +1,92 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij.platform' version '2.7.2'
+    id 'org.jetbrains.grammarkit' version '2021.2.2'
+}
+
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+
+group = 'com.magicapi.idea'
+version = '1.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
+}
+
+// 配置Java编译版本
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+// IntelliJ Platform插件配置
+intellijPlatform {
+    pluginConfiguration {
+        version = project.version
+        ideaVersion {
+            sinceBuild = '223.0'
+            untilBuild = '253.*'
+        }
+    }
+    
+    publishing {
+        // 发布配置
+    }
+}
+
+dependencies {
+    intellijPlatform {
+        intellijIdeaCommunity('2024.3.1')
+        bundledPlugin('com.intellij.java')
+        pluginVerifier()
+        zipSigner()
+        instrumentationTools()
+        // testFramework(TestFrameworkType.Platform)
+    }
+    
+    // 测试依赖
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    
+    // IntelliJ 测试框架
+    testImplementation 'com.jetbrains.intellij.platform:test-framework:242.20224.300'
+}
+
+// Grammar-Kit配置
+grammarKit {
+    jflexRelease = '1.9.2'
+    grammarKitRelease = '2022.3.2'
+}
+
+// 确保编译时使用已有的生成文件
+compileJava {
+    // 移除依赖以避免生成器配置问题
+    // dependsOn generateLexer, generateParser
+}
+
+// 配置源码目录
+sourceSets {
+    main {
+        java {
+            srcDirs 'src/main/java', 'src/gen/java'
+        }
+        resources {
+            srcDirs 'src/main/resources'
+        }
+    }
+}
+
+// 处理重复资源文件
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+test {
+    useJUnitPlatform()
+}
