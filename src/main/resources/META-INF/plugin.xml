@@ -13,10 +13,15 @@
         Features:
         <ul>
             <li>Syntax highlighting for .ms files</li>
-            <li>Code completion for keywords and built-in modules</li>
-            <li>Navigation and reference resolution</li>
+            <li>Intelligent code completion with context awareness</li>
+            <li>Smart completion for built-in modules (db, http, request, response, env, log)</li>
+            <li>Method parameter hints and documentation</li>
+            <li>Cross-file reference resolution and navigation</li>
+            <li>Ctrl+Click navigation to definitions</li>
+            <li>Find usages and rename refactoring</li>
+            <li>Hover documentation for API methods</li>
+            <li>Import statement support</li>
             <li>Code inspections and error detection</li>
-            <li>Code formatting support</li>
         </ul>
     ]]></description>
     
@@ -51,6 +56,22 @@
         <!-- 代码补全 -->
         <completion.contributor language="MagicScript" 
                               implementationClass="com.magicapi.idea.completion.MagicScriptCompletionContributor"/>
+        
+        <!-- 引用解析 -->
+        <psi.referenceContributor language="MagicScript"
+            implementationClass="com.magicapi.idea.navigation.MagicScriptReferenceContributor"/>
+        
+        <!-- 代码导航 -->
+        <gotoDeclarationHandler language="MagicScript"
+            implementationClass="com.magicapi.idea.navigation.MagicScriptGotoDeclarationHandler"/>
+        
+        <!-- 查找使用处 -->
+        <lang.findUsagesProvider language="MagicScript"
+                               implementationClass="com.magicapi.idea.navigation.MagicScriptFindUsagesProvider"/>
+        
+        <!-- 文档提供器 -->
+        <documentationProvider language="MagicScript"
+            implementationClass="com.magicapi.idea.documentation.MagicScriptDocumentationProvider"/>
     </extensions>
     
     <actions>

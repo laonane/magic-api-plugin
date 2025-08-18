@@ -153,7 +153,9 @@ continueStatement ::= CONTINUE SEMICOLON?
 
 returnStatement ::= RETURN expression? SEMICOLON?
 
-importStatement ::= IMPORT STRING_LITERAL SEMICOLON?
+importStatement ::= IMPORT STRING_LITERAL SEMICOLON? {
+  methods=[getImportPath resolveFile]
+}
 
 exportStatement ::= EXPORT (varDeclaration | functionDeclaration | expression)
 
@@ -185,7 +187,9 @@ unaryExpression ::= (NOT | MINUS | PLUS | INCREMENT | DECREMENT)* postfixExpress
 
 postfixExpression ::= primaryExpression (memberAccess | functionCall | arrayAccess | (INCREMENT | DECREMENT))*
 
-memberAccess ::= DOT IDENTIFIER
+memberAccess ::= DOT IDENTIFIER {
+  methods=[resolve getQualifier getMemberName]
+}
 
 functionCall ::= LPAREN argumentList? RPAREN
 
@@ -195,8 +199,8 @@ argumentList ::= expression (COMMA expression)*
 
 // 基础表达式
 primaryExpression ::= IDENTIFIER {
-  methods=[getName setName getReference]
-  implements="com.intellij.psi.PsiNamedElement"
+  methods=[getName setName getReference getReferences]
+  implements=["com.intellij.psi.PsiNamedElement" "com.intellij.psi.PsiReferenceProvider"]
 }
 | NUMBER_LITERAL
 | INTEGER_LITERAL  

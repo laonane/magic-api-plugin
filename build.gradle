@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'org.jetbrains.intellij.platform' version '2.7.2'
-    id 'org.jetbrains.grammarkit' version '2021.2.2'
+    id 'org.jetbrains.grammarkit' version '2022.3.2.2'
 }
 
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
@@ -62,6 +62,20 @@ dependencies {
 grammarKit {
     jflexRelease = '1.9.2'
     grammarKitRelease = '2022.3.2'
+}
+
+// 生成任务配置
+generateParser {
+    sourceFile = file("src/main/grammar/MagicScript.bnf")
+    targetRootOutputDir = file("src/gen/java")
+    pathToParser = "com/magicapi/idea/lang/parser/MagicScriptParser.java"
+    pathToPsiRoot = "com/magicapi/idea/lang/psi"
+}
+
+generateLexer {
+    sourceFile = file("src/main/grammar/MagicScriptLexer.flex")
+    targetOutputDir = file("src/gen/java/com/magicapi/idea/lang/lexer")
+    targetClass = "MagicScriptLexer"
 }
 
 // 确保编译时使用已有的生成文件

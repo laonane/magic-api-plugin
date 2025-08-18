@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 
 # Generated sources
-src/gen/
+#src/gen/
 
 # IDE
 .idea/
