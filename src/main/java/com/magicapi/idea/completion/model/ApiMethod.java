@@ -2,6 +2,7 @@ package com.magicapi.idea.completion.model;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Collections;
 
 /**
  * API方法定义
@@ -25,6 +26,11 @@ public class ApiMethod {
         this.returnDescription = returnDescription;
         this.example = example;
         this.chainable = chainable;
+    }
+    
+    // 简化构造函数，用于临时测试
+    public ApiMethod(String name, String returnType, String description) {
+        this(name, description, Collections.emptyList(), returnType, "", "", false);
     }
 
     public String getName() {

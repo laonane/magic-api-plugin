@@ -25,11 +25,22 @@ public class CompletionContext {
     private final Type type;
     private final String qualifier;  // 限定符（如成员访问中的对象名）
     private final String qualifierType; // 限定符类型
+    private final String functionName;  // 函数名称
+    private final int parameterIndex;   // 参数索引
+    private final String chainReturnType; // 链式调用返回类型
     
     public CompletionContext(@NotNull Type type, @Nullable String qualifier, @Nullable String qualifierType) {
+        this(type, qualifier, qualifierType, null, 0, null);
+    }
+    
+    public CompletionContext(@NotNull Type type, @Nullable String qualifier, @Nullable String qualifierType,
+                           @Nullable String functionName, int parameterIndex, @Nullable String chainReturnType) {
         this.type = type;
         this.qualifier = qualifier;
         this.qualifierType = qualifierType;
+        this.functionName = functionName;
+        this.parameterIndex = parameterIndex;
+        this.chainReturnType = chainReturnType;
     }
     
     @NotNull
@@ -78,6 +89,43 @@ public class CompletionContext {
         
         String type = getQualifierType();
         return type != null && isBuiltinModuleType(type);
+    }
+    
+    /**
+     * 是否为链式调用上下文
+     */
+    public boolean isChainedCall() {
+        return chainReturnType != null;
+    }
+    
+    /**
+     * 获取链式调用返回类型
+     */
+    @Nullable
+    public String getChainReturnType() {
+        return chainReturnType;
+    }
+    
+    /**
+     * 是否为参数位置
+     */
+    public boolean isParameterPosition() {
+        return type == Type.FUNCTION_PARAMETER;
+    }
+    
+    /**
+     * 获取函数名称
+     */
+    @Nullable
+    public String getFunctionName() {
+        return functionName;
+    }
+    
+    /**
+     * 获取参数索引
+     */
+    public int getParameterIndex() {
+        return parameterIndex;
     }
     
     /**

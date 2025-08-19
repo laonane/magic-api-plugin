@@ -1,14 +1,23 @@
 package com.magicapi.idea.icons;
 
-import com.intellij.openapi.util.IconLoader;
+import com.intellij.icons.AllIcons;
 
 import javax.swing.*;
 
+/**
+ * Magic Script 插件图标定义
+ * 使用 IntelliJ 内置图标，避免图标文件缺失问题
+ */
 public interface MagicScriptIcons {
-    Icon FILE = IconLoader.getIcon("/icons/magicscript-file.png", MagicScriptIcons.class);
-    Icon FUNCTION = IconLoader.getIcon("/icons/function.png", MagicScriptIcons.class);
-    Icon METHOD = IconLoader.getIcon("/icons/function.png", MagicScriptIcons.class); // 复用function图标
-    Icon VARIABLE = IconLoader.getIcon("/icons/variable.png", MagicScriptIcons.class);
-    Icon MODULE = IconLoader.getIcon("/icons/module.png", MagicScriptIcons.class);
-    Icon KEYWORD = IconLoader.getIcon("/icons/keyword.png", MagicScriptIcons.class);
+    Icon FILE = AllIcons.FileTypes.JavaScript;
+    Icon FUNCTION = AllIcons.Nodes.Function;
+    Icon METHOD = AllIcons.Nodes.Method;
+    Icon VARIABLE = AllIcons.Nodes.Variable;
+    Icon MODULE = AllIcons.Nodes.Module;
+    Icon KEYWORD = AllIcons.Nodes.Static;
+    Icon PARAMETER = AllIcons.Nodes.Parameter;
+    Icon DATABASE = AllIcons.Providers.Sqlite;
+    Icon HTTP = AllIcons.FileTypes.Json;
+    Icon BUILTIN = AllIcons.Nodes.Static;
+    Icon EXTENSION = AllIcons.Nodes.Method;
 }

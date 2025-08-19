@@ -59,19 +59,17 @@
         
         <!-- 引用解析 -->
         <psi.referenceContributor language="MagicScript"
-            implementationClass="com.magicapi.idea.navigation.MagicScriptReferenceContributor"/>
+                                  implementation="com.magicapi.idea.navigation.MagicScriptReferenceContributor"/>
         
         <!-- 代码导航 -->
-        <gotoDeclarationHandler language="MagicScript"
-            implementationClass="com.magicapi.idea.navigation.MagicScriptGotoDeclarationHandler"/>
+        <gotoDeclarationHandler implementation="com.magicapi.idea.navigation.MagicScriptGotoDeclarationHandler"/>
         
         <!-- 查找使用处 -->
         <lang.findUsagesProvider language="MagicScript"
                                implementationClass="com.magicapi.idea.navigation.MagicScriptFindUsagesProvider"/>
         
         <!-- 文档提供器 -->
-        <documentationProvider language="MagicScript"
-            implementationClass="com.magicapi.idea.documentation.MagicScriptDocumentationProvider"/>
+        <documentationProvider implementation="com.magicapi.idea.documentation.MagicScriptDocumentationProvider"/>
     </extensions>
     
     <actions>

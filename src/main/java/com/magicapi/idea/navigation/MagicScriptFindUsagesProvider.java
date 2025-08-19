@@ -1,90 +1,136 @@
 package com.magicapi.idea.navigation;
 
+import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
 import com.intellij.lang.cacheBuilder.WordsScanner;
 import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.tree.TokenSet;
+import com.magicapi.idea.lang.lexer.MagicScriptLexer;
 import com.magicapi.idea.lang.psi.MSFunctionDeclaration;
 import com.magicapi.idea.lang.psi.MSVarDeclaration;
+import com.magicapi.idea.lang.psi.MSTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Magic Script 查找使用处提供器
- * 实现"Find Usages"功能
+ * Magic Script查找用法提供器
+ * 支持查找函数、变量等的所有引用位置
  */
 public class MagicScriptFindUsagesProvider implements FindUsagesProvider {
     
     @Override
     @Nullable
     public WordsScanner getWordsScanner() {
-        // 返回词汇扫描器，用于建立索引
-        // 可以使用默认的实现或自定义
-        return null; // 使用默认实现
+        // 暂时返回null，使用默认的词汇扫描器
+        return null;
     }
     
     @Override
     public boolean canFindUsagesFor(@NotNull PsiElement psiElement) {
-        // 判断该元素是否支持查找使用处
-        return psiElement instanceof PsiNamedElement;
+        // 支持查找函数声明和变量声明的用法
+        return psiElement instanceof MSFunctionDeclaration ||
+               psiElement instanceof MSVarDeclaration ||
+               psiElement instanceof PsiNamedElement;
     }
     
     @Override
     @Nullable
     public String getHelpId(@NotNull PsiElement psiElement) {
-        // 返回帮助ID
         return null;
     }
     
     @Override
     @NotNull
     public String getType(@NotNull PsiElement element) {
-        // 返回元素类型的描述
         if (element instanceof MSFunctionDeclaration) {
-            return "function";
+            return "函数";
         } else if (element instanceof MSVarDeclaration) {
-            return "variable";
-        } else if (element instanceof PsiNamedElement) {
-            return "identifier";
+            return "变量";
+        } else if (element.getNode().getElementType() == MSTypes.IDENTIFIER) {
+            // 根据上下文判断类型
+            PsiElement parent = element.getParent();
+            if (parent instanceof MSFunctionDeclaration) {
+                return "函数";
+            } else if (parent instanceof MSVarDeclaration) {
+                return "变量";
+            } else {
+                return "标识符";
+            }
         }
-        return "element";
+        return "元素";
     }
     
     @Override
     @NotNull
     public String getDescriptiveName(@NotNull PsiElement element) {
-        // 返回元素的描述性名称
         if (element instanceof PsiNamedElement) {
-            String name = ((PsiNamedElement) element).getName();
-            return name != null ? name : "unnamed";
-        }
-        return "unnamed";
-    }
-    
-    @Override
-    @NotNull
-    public String getNodeText(@NotNull PsiElement element, boolean useFullName) {
-        // 返回元素在树中显示的文本
-        if (element instanceof MSFunctionDeclaration) {
-            MSFunctionDeclaration function = (MSFunctionDeclaration) element;
-            String name = function.getName();
-            if (name != null) {
-                // 显示函数签名
-                return "function " + name + "()";
-            }
-        } else if (element instanceof MSVarDeclaration) {
-            MSVarDeclaration var = (MSVarDeclaration) element;
-            String name = var.getName();
-            if (name != null) {
-                return "var " + name;
-            }
-        } else if (element instanceof PsiNamedElement) {
             String name = ((PsiNamedElement) element).getName();
             if (name != null) {
                 return name;
             }
         }
         
+        if (element instanceof MSFunctionDeclaration) {
+            MSFunctionDeclaration function = (MSFunctionDeclaration) element;
+            String name = function.getName();
+            if (name != null) {
+                return name + "()";
+            }
+        } else if (element instanceof MSVarDeclaration) {
+            MSVarDeclaration variable = (MSVarDeclaration) element;
+            String name = variable.getName();
+            if (name != null) {
+                return name;
+            }
+        }
+        
         return element.getText();
+    }
+    
+    @Override
+    @NotNull
+    public String getNodeText(@NotNull PsiElement element, boolean useFullName) {
+        if (element instanceof MSFunctionDeclaration) {
+            MSFunctionDeclaration function = (MSFunctionDeclaration) element;
+            String name = function.getName();
+            if (name != null) {
+                if (useFullName) {
+                    // 显示完整的函数签名
+                    return "function " + name + "(" + getFunctionParameters(function) + ")";
+                } else {
+                    return name + "()";
+                }
+            }
+        } else if (element instanceof MSVarDeclaration) {
+            MSVarDeclaration variable = (MSVarDeclaration) element;
+            String name = variable.getName();
+            if (name != null) {
+                if (useFullName) {
+                    return "var " + name;
+                } else {
+                    return name;
+                }
+            }
+        }
+        
+        return element.getText();
+    }
+    
+    /**
+     * 获取函数参数列表字符串
+     */
+    @NotNull
+    private String getFunctionParameters(@NotNull MSFunctionDeclaration function) {
+        // 简化实现：从函数文本中提取参数
+        String functionText = function.getText();
+        int startParen = functionText.indexOf('(');
+        int endParen = functionText.indexOf(')', startParen);
+        
+        if (startParen != -1 && endParen != -1 && endParen > startParen) {
+            return functionText.substring(startParen + 1, endParen);
+        }
+        
+        return "";
     }
 }
