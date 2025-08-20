@@ -8,6 +8,7 @@ import com.intellij.psi.TokenType;
 %%
 
 %class MagicScriptLexer
+%public
 %implements FlexLexer
 %unicode
 %function advance

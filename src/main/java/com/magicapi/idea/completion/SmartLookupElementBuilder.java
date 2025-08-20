@@ -2,7 +2,6 @@ package com.magicapi.idea.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.codeInsight.lookup.LookupElementWeigher;
 import com.magicapi.idea.completion.model.ApiMethod;
 import com.magicapi.idea.completion.model.Parameter;
 import com.magicapi.idea.icons.MagicScriptIcons;

@@ -1,0 +1,19 @@
+// Magic Script file
+//
+// Example usage:
+
+var data = db.select("SELECT * FROM table_name");
+
+function processData() {
+    return data.map(function(item) {
+        return {
+            id: item.id,
+            name: item.name
+        };
+    });
+}
+
+response.json({
+    success: true,
+    data: processData()
+});

@@ -7,14 +7,12 @@ import com.intellij.codeInsight.template.TemplateManager;
 import com.intellij.codeInsight.template.impl.TemplateImpl;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.patterns.PlatformPatterns;
 import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import com.magicapi.idea.completion.context.CompletionContext;
 import com.magicapi.idea.completion.context.CompletionContextAnalyzer;
 import com.magicapi.idea.completion.model.ApiMethod;
-import com.magicapi.idea.completion.model.MagicApiDefinitions;
 import com.magicapi.idea.completion.model.MagicApiModule;
 import com.magicapi.idea.completion.model.Parameter;
 import com.magicapi.idea.registry.ModuleRegistry;
@@ -23,7 +21,6 @@ import com.magicapi.idea.icons.MagicScriptIcons;
 import org.jetbrains.annotations.NotNull;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
-import static com.intellij.patterns.PlatformPatterns.or;
 
 /**
  * Magic Script 智能补全贡献器

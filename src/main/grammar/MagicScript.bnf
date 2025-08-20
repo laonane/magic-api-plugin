@@ -1,6 +1,5 @@
 {
   parserClass="com.magicapi.idea.lang.parser.MagicScriptParser"
-  parserUtilClass="com.magicapi.idea.lang.parser.MagicScriptParserUtil"
   
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
   

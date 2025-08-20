@@ -4,8 +4,6 @@ plugins {
     id 'org.jetbrains.grammarkit' version '2022.3.2.2'
 }
 
-import org.jetbrains.intellij.platform.gradle.TestFrameworkType
-
 group = 'com.magicapi.idea'
 version = '1.0.0-SNAPSHOT'
 
@@ -70,12 +68,14 @@ generateParser {
     targetRootOutputDir = file("src/gen/java")
     pathToParser = "com/magicapi/idea/lang/parser/MagicScriptParser.java"
     pathToPsiRoot = "com/magicapi/idea/lang/psi"
+    purgeOldFiles = true
 }
 
 generateLexer {
     sourceFile = file("src/main/grammar/MagicScriptLexer.flex")
     targetOutputDir = file("src/gen/java/com/magicapi/idea/lang/lexer")
     targetClass = "MagicScriptLexer"
+    purgeOldFiles = true
 }
 
 // 确保编译时使用已有的生成文件

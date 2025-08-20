@@ -55,7 +55,7 @@
         
         <!-- 代码补全 -->
         <completion.contributor language="MagicScript" 
-                              implementationClass="com.magicapi.idea.completion.MagicScriptCompletionContributor"/>
+                              implementationClass="com.magicapi.idea.completion.SimpleMagicScriptCompletionContributor"/>
         
         <!-- 引用解析 -->
         <psi.referenceContributor language="MagicScript"
@@ -74,11 +74,19 @@
     
     <actions>
         <!-- 新建文件操作 -->
-        <action id="MagicScript.NewFile" 
+        <action id="MagicScript.NewFile"
                 class="com.magicapi.idea.actions.CreateMagicScriptFileAction"
-                text="Magic Script File" 
+                text="Magic Script File"
                 description="Create a new Magic Script file">
             <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
+        </action>
+        
+        <!-- 简单的文件创建操作 -->
+        <action id="MagicScript.NewSimpleFile"
+                class="com.magicapi.idea.actions.CreateSimpleMagicScriptFileAction"
+                text="Magic Script (Simple)"
+                description="Create a new Magic Script file with simple template">
+            <add-to-group group-id="NewGroup" anchor="after" relative-to-action="MagicScript.NewFile"/>
         </action>
     </actions>
 </idea-plugin>
